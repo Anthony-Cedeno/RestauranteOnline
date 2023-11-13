@@ -143,3 +143,10 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+# Configuracion de emails
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER') #el email que enviara correos a los usuarios
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') #la contrasena del email
+EMAIL_USE_TLS = True
