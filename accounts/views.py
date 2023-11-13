@@ -4,13 +4,36 @@ from django.shortcuts import redirect, render
 from vendor.forms import VendorForm
 from .forms import UserForm
 from .models import User, UserProfile
-from django.contrib import messages
+from django.contrib import messages, auth
+from .utils import detectUser, send_verification_email
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-
+from django.core.exceptions import PermissionDenied
+from vendor.models import Vendor
+from django.template.defaultfilters import slugify
 # Create your views here.
 
+# Restriccion de acceso de la sucursal hacia la pagina de los clientes
+def check_role_vendor(user):
+    if user.role == 1:
+        return True
+    else:
+        raise PermissionDenied
+
+
+# Restriccion de acceso del cliente hacia la pagina de las sucursales
+def check_role_customer(user):
+    if user.role == 2:
+        return True
+    else:
+        raise PermissionDenied
+
+
 def registerUser(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request, 'Estas actualmente logeado!')
+        return redirect('dashboard')
+    elif request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             # Create the user using the form
@@ -44,7 +67,10 @@ def registerUser(request):
 
 
 def registerVendor(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request, 'Estas actualmente logeado!')
+        return redirect('myAccount')
+    elif request.method == 'POST':
         # Almacenar los datos y crear el usuario
         form = UserForm(request.POST)
         v_form = VendorForm(request.POST, request.FILES)
@@ -59,9 +85,13 @@ def registerVendor(request):
             user.save()
             vendor = v_form.save(commit=False)
             vendor.user = user
+            #vendor_name = v_form.cleaned_data['vendor_name']
+            #vendor.vendor_slug = slugify(vendor_name) + '-' + str(user.id)
             user_profile = UserProfile.objects.get(user=user)
             vendor.user_profile = user_profile
             vendor.save()
+
+
             messages.success(request, 'La cuenta ha sido registrada con exito! Por favor espere por la confirmacion.')
             return redirect('registerVendor')
         else:
@@ -77,3 +107,39 @@ def registerVendor(request):
     }
 
     return render(request, 'accounts/registerVendor.html', context)
+
+def login(request):
+    if request.user.is_authenticated:
+        messages.warning(request, 'Estas actualmente logeado!')
+        return redirect('myAccount')
+    elif request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = auth.authenticate(email=email, password=password)
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, 'Ahora estas logeado.')
+            return redirect('myAccount')
+        else:
+            messages.error(request, 'Tus credenciales son incorrectas')
+            return redirect('login')
+    return render(request, 'accounts/login.html')
+def logout(request):
+    auth.logout(request)
+    messages.info(request, 'Acabas de cerrar sesion.')
+    return redirect('login')
+@login_required(login_url='login')
+def myAccount(request):
+    user = request.user
+    redirectUrl = detectUser(user)
+    return redirect(redirectUrl)
+@login_required(login_url='login')
+@user_passes_test(check_role_customer)
+def custDashboard(request):
+
+    return render(request, 'accounts/custDashboard.html')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def vendorDashboard(request):
+    return render(request, 'accounts/vendorDashboard.html')
