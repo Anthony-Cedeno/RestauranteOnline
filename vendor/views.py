@@ -5,13 +5,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.db import IntegrityError
 
 from menu.forms import CategoryForm, FoodItemForm
-from orders.models import Order, OrderedFood
+#from orders.models import Order, OrderedFood
 import vendor
-from .forms import VendorForm, OpeningHourForm
+from .forms import VendorForm#, OpeningHourForm
 from accounts.forms import UserProfileForm
 
 from accounts.models import UserProfile
-from .models import OpeningHour, Vendor
+from .models import Vendor#, OpeningHour
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -89,10 +89,10 @@ def add_category(request):
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
 
-            category.save()  # here the category id will be generated
+            category.save()  # Aqui la categoria va a ser generada
             category.slug = slugify(category_name) + '-' + str(category.id)  # chicken-15
             category.save()
-            messages.success(request, 'Category added successfully!')
+            messages.success(request, 'Categoria agregada exitosamente!')
             return redirect('menu_builder')
         else:
             print(form.errors)
@@ -117,13 +117,13 @@ def edit_category(request, pk=None):
             category.vendor = get_vendor(request)
             category.slug = slugify(category_name)
             form.save()
-            messages.success(request, 'Category updated successfully!')
+            messages.success(request, 'Categoria actualizada exitosamente!')
             return redirect('menu_builder')
         else:
             print(form.errors)
 
     else:
-        form = CategoryForm(instance=category)
+        form = CategoryForm(instance=category)##Para mostrar en el formulario lo que vas a modificar "instance=category"
     context = {
         'form': form,
         'category': category,
@@ -136,7 +136,7 @@ def edit_category(request, pk=None):
 def delete_category(request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
-    messages.success(request, 'Category has been deleted successfully!')
+    messages.success(request, 'La categoria ha sido eliminada exitosamente!')
     return redirect('menu_builder')
 
 
@@ -151,7 +151,7 @@ def add_food(request):
             food.vendor = get_vendor(request)
             food.slug = slugify(foodtitle)
             form.save()
-            messages.success(request, 'Food Item added successfully!')
+            messages.success(request, 'Item agregado exitosamente!')
             return redirect('fooditems_by_category', food.category.id)
         else:
             print(form.errors)
@@ -177,7 +177,7 @@ def edit_food(request, pk=None):
             food.vendor = get_vendor(request)
             food.slug = slugify(foodtitle)
             form.save()
-            messages.success(request, 'Food Item updated successfully!')
+            messages.success(request, 'Item actualizado exitosamente!')
             return redirect('fooditems_by_category', food.category.id)
         else:
             print(form.errors)
@@ -197,7 +197,7 @@ def edit_food(request, pk=None):
 def delete_food(request, pk=None):
     food = get_object_or_404(FoodItem, pk=pk)
     food.delete()
-    messages.success(request, 'Food Item has been deleted successfully!')
+    messages.success(request, 'El Item ha sido eliminado exitosamente!')
     return redirect('fooditems_by_category', food.category.id)
 
 
