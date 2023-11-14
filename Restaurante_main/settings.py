@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.get_vendor', ##Hay que poner el templete recien creado
+                'accounts.context_processors.get_google_api',
             ],
         },
     },
@@ -151,3 +152,6 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER') #el email que enviara correos a los usuarios
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') #la contrasena del email
 EMAIL_USE_TLS = True
+
+GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+#GooAIzaSyB78eYtloPZD6cZUDBst3uudy4Q8klaA-0
