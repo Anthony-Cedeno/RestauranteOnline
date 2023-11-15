@@ -157,7 +157,7 @@ def add_food(request):
             print(form.errors)
     else:
         form = FoodItemForm()
-        # modify this form
+        # modificar el form para que muestre solo las categorias de ese restaurante y no todas las categorias
         form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
     context = {
         'form': form,
