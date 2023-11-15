@@ -73,7 +73,7 @@ function onPlaceChanged (){
 
 
 $(document).ready(function(){
-    // add to cart
+    // agregar al carrito
     $('.add_to_cart').on('click', function(e){
         e.preventDefault();
 
@@ -108,14 +108,14 @@ $(document).ready(function(){
     })
 
 
-    // place the cart item quantity on load
+    // Mostrar la cantidad de items al agregar
     $('.item_qty').each(function(){
         var the_id = $(this).attr('id')
         var qty = $(this).attr('data-qty')
         $('#'+the_id).html(qty)
     })
 
-    // decrease cart
+    // Restar al carrito
     $('.decrease_cart').on('click', function(e){
         e.preventDefault();
 
@@ -156,7 +156,7 @@ $(document).ready(function(){
     })
 
 
-    // DELETE CART ITEM
+    // Eliminar item del carrito
     $('.delete_cart').on('click', function(e){
         e.preventDefault();
 
@@ -189,16 +189,16 @@ $(document).ready(function(){
     })
 
 
-    // delete the cart element if the qty is 0
+    // Eliminar item del carrito si la cantidad es 0
     function removeCartItem(cartItemQty, cart_id){
             if(cartItemQty <= 0){
-                // remove the cart item element
+                // remover del carrito ese particular item
                 document.getElementById("cart-item-"+cart_id).remove()
             }
 
     }
 
-    // Check if the cart is empty
+    // Checar si el carro esta vacio
     function checkEmptyCart(){
         var cart_counter = document.getElementById('cart_counter').innerHTML
         if(cart_counter == 0){
@@ -207,7 +207,7 @@ $(document).ready(function(){
     }
 
 
-    // apply cart amounts
+    // Aplicar la suma en el carrito
     function applyCartAmounts(subtotal, tax_dict, grand_total){
         if(window.location.pathname == '/cart/'){
             $('#subtotal').html(subtotal)

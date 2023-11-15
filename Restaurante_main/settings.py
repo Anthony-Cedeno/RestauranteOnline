@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'vendor',
     'menu',
+    'marketplace',
 
 ]
 
@@ -69,6 +70,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.get_vendor', ##Hay que poner el templete recien creado
                 'accounts.context_processors.get_google_api',
+                'marketplace.context_processors.get_cart_counter',
+                'marketplace.context_processors.get_cart_amounts',
             ],
         },
     },
