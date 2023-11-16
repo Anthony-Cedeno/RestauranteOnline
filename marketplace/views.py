@@ -5,7 +5,7 @@ from accounts.models import UserProfile
 from .context_processors import get_cart_counter, get_cart_amounts
 from menu.models import Category, FoodItem
 
-#from vendor.models import OpeningHour, Vendor
+from vendor.models import OpeningHour, Vendor
 from django.db.models import Prefetch
 from .models import Cart
 from django.contrib.auth.decorators import login_required
@@ -41,11 +41,13 @@ def vendor_detail(request, vendor_slug):
 
     opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day', 'from_hour')
 
-    # Check current day's opening hours.
+    # Checar hora de apertura del actual dia
     today_date = date.today()
     today = today_date.isoweekday()
 
     current_opening_hours = OpeningHour.objects.filter(vendor=vendor, day=today)
+
+
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
     else:

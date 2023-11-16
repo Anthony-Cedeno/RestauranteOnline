@@ -5,13 +5,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.db import IntegrityError
 
 from menu.forms import CategoryForm, FoodItemForm
-#from orders.models import Order, OrderedFood
+# from orders.models import Order, OrderedFood
 import vendor
-from .forms import VendorForm#, OpeningHourForm
+from .forms import VendorForm, OpeningHourForm
 from accounts.forms import UserProfileForm
 
 from accounts.models import UserProfile
-from .models import Vendor#, OpeningHour
+from .models import Vendor, OpeningHour
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -123,7 +123,8 @@ def edit_category(request, pk=None):
             print(form.errors)
 
     else:
-        form = CategoryForm(instance=category)##Para mostrar en el formulario lo que vas a modificar "instance=category"
+        form = CategoryForm(
+            instance=category)  ##Para mostrar en el formulario lo que vas a modificar "instance=category"
     context = {
         'form': form,
         'category': category,
@@ -212,7 +213,7 @@ def opening_hours(request):
 
 
 def add_opening_hours(request):
-    # handle the data and save them inside the database
+    # manejar los datos y guardarlos dentro de la BaseDatos
     if request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
             day = request.POST.get('day')
@@ -233,10 +234,10 @@ def add_opening_hours(request):
                                     'from_hour': hour.from_hour, 'to_hour': hour.to_hour}
                 return JsonResponse(response)
             except IntegrityError as e:
-                response = {'status': 'failed', 'message': from_hour + '-' + to_hour + ' already exists for this day!'}
+                response = {'status': 'failed', 'message': from_hour + '-' + to_hour + ' Ya existe este dia!'}
                 return JsonResponse(response)
         else:
-            HttpResponse('Invalid request')
+            HttpResponse('Solicitud Invalida')
 
 
 def remove_opening_hours(request, pk=None):
@@ -247,28 +248,28 @@ def remove_opening_hours(request, pk=None):
             return JsonResponse({'status': 'success', 'id': pk})
 
 
-def order_detail(request, order_number):
-    try:
-        order = Order.objects.get(order_number=order_number, is_ordered=True)
-        ordered_food = OrderedFood.objects.filter(order=order, fooditem__vendor=get_vendor(request))
-
-        context = {
-            'order': order,
-            'ordered_food': ordered_food,
-            'subtotal': order.get_total_by_vendor()['subtotal'],
-            'tax_data': order.get_total_by_vendor()['tax_dict'],
-            'grand_total': order.get_total_by_vendor()['grand_total'],
-        }
-    except:
-        return redirect('vendor')
-    return render(request, 'vendor/order_detail.html', context)
-
-
-def my_orders(request):
-    vendor = Vendor.objects.get(user=request.user)
-    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('created_at')
-
-    context = {
-        'orders': orders,
-    }
-    return render(request, 'vendor/my_orders.html', context)
+# def order_detail(request, order_number):
+#     try:
+#         order = Order.objects.get(order_number=order_number, is_ordered=True)
+#         ordered_food = OrderedFood.objects.filter(order=order, fooditem__vendor=get_vendor(request))
+#
+#         context = {
+#             'order': order,
+#             'ordered_food': ordered_food,
+#             'subtotal': order.get_total_by_vendor()['subtotal'],
+#             'tax_data': order.get_total_by_vendor()['tax_dict'],
+#             'grand_total': order.get_total_by_vendor()['grand_total'],
+#         }
+#     except:
+#         return redirect('vendor')
+#     return render(request, 'vendor/order_detail.html', context)
+#
+#
+# def my_orders(request):
+#     vendor = Vendor.objects.get(user=request.user)
+#     orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('created_at')
+#
+#     context = {
+#         'orders': orders,
+#     }
+#     return render(request, 'vendor/my_orders.html', context)
