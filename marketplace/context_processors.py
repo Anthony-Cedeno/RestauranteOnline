@@ -1,7 +1,8 @@
 from .models import Cart, Tax
 from menu.models import FoodItem
 
-#Obtener el total de items en el carrito
+
+# Obtener el total de items en el carrito
 def get_cart_counter(request):
     cart_count = 0
     if request.user.is_authenticated:
@@ -38,3 +39,5 @@ def get_cart_amounts(request):
         tax = sum(x for key in tax_dict.values() for x in key.values())
         grand_total = subtotal + tax
     return dict(subtotal=subtotal, tax=tax, grand_total=grand_total, tax_dict=tax_dict)
+
+

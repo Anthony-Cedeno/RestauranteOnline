@@ -102,6 +102,7 @@ $(document).ready(function(){
                         response.cart_amount['tax_dict'],
                         response.cart_amount['grand_total']
                     )
+//                    console.log(response.cart_amount['tax_dict']);
                 }
             }
         })
