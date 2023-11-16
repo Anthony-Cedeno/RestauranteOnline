@@ -11,7 +11,8 @@
                         <div class="logo">
                             <figure>
                                 <a href="{% url 'home' %}" class="light-logo">
-                                    <img src="{% static 'logo/foodOnlineLogo.png' %}" alt="RestauranteOnline" width="250">
+                                    <img src="{% static 'logo/foodOnlineLogo.png' %}" alt="RestauranteOnline"
+                                         width="250">
                                 </a>
                             </figure>
                         </div>
@@ -21,29 +22,36 @@
                             <ul>
                                 <li class="location-has-children choose-location">
                                     <form action="#">
-                                        <input type="text" value="" name="location" id="location" placeholder="Your current location" autocomplete="off">
-                                        <span id="foodbakery_radius_location_open" class="foodbakery-radius-location" onclick="getLocation()"><i class="icon-target5"></i></span>
+                                        <input type="text" value="" name="location" id="location"
+                                               placeholder="Your current location" autocomplete="off">
+                                        <span id="foodbakery_radius_location_open" class="foodbakery-radius-location"
+                                              onclick="getLocation()"><i class="icon-target5"></i></span>
                                     </form>
 
                                 </li>
                             </ul>
-                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         <div class="login-option">
                             {% if user.is_authenticated %}
                             <a href="{% url 'cart' %}">
                                 <i class="fa fa-shopping-cart text-danger" style="font-size: 20px;"></i>
-                                <span class="badge badge-warning" id="cart_counter" style="border-radius: 50px; position: relative; bottom:10px; left: -5px;">{{ cart_count }}</span>
+                                <span class="badge badge-warning" id="cart_counter"
+                                      style="border-radius: 50px; position: relative; bottom:10px; left: -5px;">{{ cart_count }}</span>
                             </a>
                             {% endif %}
                             <a href="#" class="btn btn-outline-danger text-uppercase font-weight-bold">Marketplace</a>
                             {% if user.is_authenticated %}
-                            <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'myAccount' %}">Mi Cuenta</a>
-                            <a class="cs-color cs-popup-joinus-btn login-popup text-danger" href="{% url 'logout' %}">Cerrar Sesion</a>
+                            <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'myAccount' %}">Mi
+                                Cuenta</a>
+                            <a class="cs-color cs-popup-joinus-btn login-popup text-danger" href="{% url 'logout' %}">Cerrar
+                                Sesion</a>
                             {% else %}
                             <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'login' %}">Iniciar</a> /
-                                <span><a href="{% url 'registerUser' %}" class="cs-color cs-popup-joinus-btn login-popup ml-0">Registrarse</a></span><a class="get-start-btn" href="{% url 'registerVendor' %}">Registrar Local </a>
+                            <span><a href="{% url 'registerUser' %}"
+                                     class="cs-color cs-popup-joinus-btn login-popup ml-0">Registrarse</a></span><a
+                                class="get-start-btn" href="{% url 'registerVendor' %}">Registrar Local </a>
                             {% endif %}
                         </div>
                     </div>
@@ -54,40 +62,41 @@
     <!-- Header End -->
 
     <script>
-    var x = document.getElementById("location");
-    var current_location = sessionStorage.getItem("current_location")
-    if(current_location != ""){
-        x.value = current_location;
-    }
-
-    function getLocation() {
-        if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
+        var x = document.getElementById("location");
+        var current_location = sessionStorage.getItem("current_location")
+        if(current_location != ""){
+            x.value = current_location;
         }
-    }
 
-    function showPosition(position) {
-        var lat = position.coords.latitude
-        var lng = position.coords.longitude
-
-        // var lat = '19.0713949'
-        // var lng = '72.9984126'
-
-        // hit AJAX request to googlemaps api endpoint and get the location data using those lat and lng
-        var GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}"
-        var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"+&key="+GOOGLE_API_KEY
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            success: function(response){
-                var current_location = response.results[0].formatted_address
-                x.value = current_location
-                sessionStorage.setItem("current_location", current_location)
-                window.location = '?lat='+lat+'&lng='+lng
+        function getLocation() {
+            if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
             }
-        })
-    }
+        }
+
+        function showPosition(position) {
+            var lat = position.coords.latitude
+            var lng = position.coords.longitude
+
+            // var lat = '19.0713949'
+            // var lng = '72.9984126'
+
+            // hit AJAX request to googlemaps api endpoint and get the location data using those lat and lng
+            var GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}"
+            var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"+&key="+GOOGLE_API_KEY
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function(response){
+                    var current_location = response.results[0].formatted_address
+                    x.value = current_location
+                    sessionStorage.setItem("current_location", current_location)
+                    window.location = '?lat='+lat+'&lng='+lng
+                }
+            })
+        }
     </script>
+
