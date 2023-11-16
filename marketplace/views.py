@@ -5,7 +5,7 @@ from accounts.models import UserProfile
 from .context_processors import get_cart_counter, get_cart_amounts
 from menu.models import Category, FoodItem
 
-from vendor.models import OpeningHour, Vendor
+#from vendor.models import OpeningHour, Vendor
 from django.db.models import Prefetch
 from .models import Cart
 from django.contrib.auth.decorators import login_required
@@ -156,7 +156,8 @@ def search(request):
         radius = request.GET['radius']
         keyword = request.GET['keyword']
 
-        # get vendor ids that has the food item the user is looking for
+
+        #obtener el proveedor que tiene la comida que el usuario esta buscando
         fetch_vendors_by_fooditems = FoodItem.objects.filter(food_title__icontains=keyword,
                                                              is_available=True).values_list('vendor', flat=True)
 

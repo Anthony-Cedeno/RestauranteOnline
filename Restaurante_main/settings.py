@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -27,7 +27,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'vendor',
     'menu',
     'marketplace',
+    'django.contrib.gis',
 
 ]
 
@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'accounts.context_processors.get_vendor', ##Hay que poner el templete recien creado
+                'accounts.context_processors.get_vendor',  ##Hay que poner el templete recien creado
                 'accounts.context_processors.get_google_api',
                 'marketplace.context_processors.get_cart_counter',
                 'marketplace.context_processors.get_cart_amounts',
@@ -79,13 +79,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Restaurante_main.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
@@ -114,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -126,19 +125,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR /'static'
+STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     'Restaurante_main/static'
 ]
 
 # Media configuracion
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR /'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -146,6 +144,7 @@ MEDIA_ROOT = BASE_DIR /'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
@@ -153,9 +152,14 @@ MESSAGE_TAGS = {
 # Configuracion de emails
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER') #el email que enviara correos a los usuarios
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') #la contrasena del email
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # el email que enviara correos a los usuarios
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # la contrasena del email
 EMAIL_USE_TLS = True
 
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
-#GooAIzaSyB78eYtloPZD6cZUDBst3uudy4Q8klaA-0
+# GooAIzaSyB78eYtloPZD6cZUDBst3uudy4Q8klaA-0
+
+
+os.environ['PATH'] = os.path.join(BASE_DIR, 'venvLibsite-packagesosgeo') + ';' + os.environ['PATH']
+os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, 'venvLibsite-packagesosgeodataproj') + ';' + os.environ['PATH']
+GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, 'venvLibsite-packagesosgeogdal304.dll')

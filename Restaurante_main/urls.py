@@ -30,8 +30,8 @@ urlpatterns = [
 
     # Carrito
     path('cart/', MarketplaceViews.cart, name='cart'),
-    # SEARCH
-    #path('search/', MarketplaceViews.search, name='search'),
+    # Buscar
+    path('search/', MarketplaceViews.search, name='search'),
 
     # CHECKOUT
     #path('checkout/', MarketplaceViews.checkout, name='checkout'),
